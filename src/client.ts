@@ -36,6 +36,7 @@ function initClients(): Promise<Array<Launcher>> {
                 };
 
                 clients.push(client);
+                console.log("[LOGIN] Manual login successful.");
             };
         };
 
