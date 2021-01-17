@@ -1,31 +1,36 @@
+import {getAccounts, EpicAccount} from "./config";
 import {Launcher} from "epicgames-client";
 import {default as ClientLoginAdapter} from "epicgames-client-login-adapter";
-import {getAccounts} from "./config";
 
 let accounts = getAccounts();
 let clients = [];
 
-async function init() {
-    for (let i in accounts) {
-        let login = accounts[i];
-        let client = new Launcher();
-        
-        if (!await client.init()) {
-            throw new Error("Error occurred while initializing launcher.");
+function initClients(): Promise<Array<EpicAccount>> {
+    return new Promise(async (resolve, reject) => {
+        for (let i in accounts) {
+            let login = accounts[i];
+            let client = new Launcher();
+            
+            if (!await client.init()) {
+                reject("Error occurred while initializing launcher.");
+                return;
+            };
+
+            let auth = await ClientLoginAdapter.init({email: login.email, password: login.password});
+            let code = await auth.getExchangeCode();
+            
+            await auth.close();
+
+            if (!await client.login(null, code)) {
+                reject("Error occurred while logging in.");
+                return;
+            };
+
+            clients.push(client);
         };
 
-        let auth = await ClientLoginAdapter.init({email: login.email, password: login.password, rememberLastSession: true});
-        let code = await auth.getExchangeCode();
-        
-        await auth.close();
-
-        if (!await client.login(null, code)) {
-            throw new Error("Error occurred while logging in.");
-        };
-
-        console.log(1);
-        console.log(await client.getProfile("SaturdaysHeroes"));
-    };
+        resolve(clients);
+    });
 };
 
-export {init};
+export {initClients as init, clients as list};
