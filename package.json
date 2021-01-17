@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/SaturdaysHeroes/epic-claimer#readme",
   "dependencies": {
+    "axios": "^0.21.1",
     "epicgames-client": "^2.0.25",
     "epicgames-client-login-adapter": "^0.1.2",
     "path": "^0.12.7",
