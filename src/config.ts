@@ -3,12 +3,12 @@ import * as fs from "fs";
 
 let config = JSON.parse(fs.readFileSync(path.join(__dirname, "../config.json"), "utf8"));
 
-interface EpicAccount {
+export interface EpicAccount {
     email: string; 
     password: string; 
 };
 
-interface Config {
+export interface Config {
     accounts: EpicAccount[];
 };
 
