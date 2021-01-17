@@ -80,4 +80,32 @@ async function getFreeGames(country: string = "US", locale: string = "en-US"): P
     });
 };
 
-export {getFreeGames};
+async function getPromotions(country: string = "US", locale: string = "en-US"): Promise<Array<any>> {
+    return new Promise(async (resolve, reject) => {
+        getFreeGames(country, country)
+            .then(games => {
+                resolve(games);
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+};
+
+async function claimPromotions(client, promos: Array<any>): Promise<void> {
+    for (let promo of promos) {
+        try {
+            let bought = await client.quickPurchase(promo, 1)
+            if (bought) {
+                console.log(`[GAMES] Claimed free game: ${promo.title} (${bought})`);
+                break;
+            } else {
+                console.log(`[GAMES] Failed to claim game: ${promo.title}.`);
+            };
+        } catch(ex) {
+            console.log(`[ERROR] ${ex}`);
+        };
+    };
+};
+
+export {getFreeGames, getPromotions, claimPromotions};
