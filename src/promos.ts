@@ -93,19 +93,23 @@ async function getPromotions(country: string = "US", locale: string = "en-US"): 
 };
 
 async function claimPromotions(client, promos: Array<any>): Promise<void> {
-    for (let promo of promos) {
-        try {
-            let bought = await client.quickPurchase(promo, 1)
-            if (bought) {
-                console.log(`[GAMES] Claimed free game: ${promo.title} (${bought})`);
-                break;
-            } else {
-                console.log(`[GAMES] Failed to claim game: ${promo.title}.`);
+    return new Promise(async (resolve, reject) => {
+        for await (let promo of promos) {
+            try {
+                let bought = await client.quickPurchase(promo, 1)
+                if (bought) {
+                    console.log(`[GAMES] Claimed free game: ${promo.title} (${bought})`);
+                } else {
+                    console.log(`[GAMES] Failed to claim game: ${promo.title}.`);
+                };
+            } catch(ex) {
+                console.log(`[ERROR] ${ex}`);
+                reject(ex);
             };
-        } catch(ex) {
-            console.log(`[ERROR] ${ex}`);
         };
-    };
+
+        resolve();
+    });
 };
 
 export {getFreeGames, getPromotions, claimPromotions};
