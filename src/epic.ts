@@ -1,4 +1,4 @@
-import {getAccounts, EpicAccount} from "./config";
+import {getAccounts} from "./config";
 import {Launcher} from "epicgames-client";
 import {default as ClientLoginAdapter} from "epicgames-client-login-adapter";
 
@@ -13,7 +13,7 @@ function initClients(): Promise<Array<Launcher>> {
             let options = {
                 email: login.email,
                 password: login.password
-            }
+            };
             
             if (!await client.init()) {
                 reject("Error occurred while initializing launcher.");
