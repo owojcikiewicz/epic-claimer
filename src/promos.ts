@@ -1,4 +1,5 @@
 import axios from "axios";
+import {purchase} from "./purchases";
 
 let GAMES_ENDPOINT: string = "https://store-site-backend-static.ak.epicgames.com/freeGamesPromotions?country={{country}}&allowCountries={{allowCountries}}&locale={{locale}}";
 let PRODUCTS_ENDPOINT: string = "https://store-content.ak.epicgames.com/api/{{locale}}/content/products/{{slug}}";
@@ -96,7 +97,7 @@ async function claimPromotions(client, promos: Array<any>): Promise<void> {
     return new Promise(async (resolve, reject) => {
         for await (let promo of promos) {
             try {
-                let bought = await client.quickPurchase(promo, 1)
+                let bought = await purchase(client, promo, 1)
                 if (bought) {
                     console.log(`[GAMES] Claimed free game: ${promo.title} (${bought})`);
                 } else {
